@@ -1,17 +1,18 @@
-from flask import jsonify, request
+from flask import jsonify
 from ..utils import InputValidator
-from ..database import GetUserDB , UpdateUserDB, CreateUserDB
+from ..database import GetUserDB , UpdateUserDB , CreateUserDB
 
 class CreateOrUpdateUserService:
     def create_or_update_user(self, user_data):
         try:
+            
             # Verificar que se proporcionen los datos utilizando InputValidator
             if not InputValidator.validate_user_data(user_data):
                 return jsonify({"error": "Api_key, correo y contraseña son obligatorios"}), 400
-
+            
             # Verificar si el usuario ya existe
             get_user_db = GetUserDB()
-            existing_user = get_user_db.get_user_by_username(user_data['usuario'])
+            existing_user = get_user_db.get_user(user_data['usuario'])
             
             if existing_user:
                 # Si el usuario ya existe, actualízalo

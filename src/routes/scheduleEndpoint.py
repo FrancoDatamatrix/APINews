@@ -1,5 +1,5 @@
 from flask import jsonify, Blueprint, request
-from ..services import scheduleService
+from ..services import ScheduleService
 
 schedule_blueprint = Blueprint('schedule', __name__)
 
@@ -11,11 +11,11 @@ def endpoint_query():
 
         
         # Crear una instancia del servicio
-        servicio = scheduleService()
+        servicio = ScheduleService()
 
         # Procesar la petición utilizando el servicio
         resultado = servicio.query(user_data)
 
-        return jsonify(resultado)
+        return resultado
     except Exception as e:
         return jsonify({"error": str(e)})

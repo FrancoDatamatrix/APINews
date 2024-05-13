@@ -4,7 +4,7 @@ from ..services import DeleteUserService
 delete_blueprint = Blueprint('delete', __name__)
 
 # Ruta para crear un nuevo usuario
-@delete_blueprint.route('/api/v1/delete-users', methods=['DELETE'])
+@delete_blueprint.route('/api/v1/delete-user', methods=['DELETE'])
 
 def delete_user():
     try:
