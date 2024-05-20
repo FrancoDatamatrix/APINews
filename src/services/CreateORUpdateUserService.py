@@ -1,6 +1,9 @@
 from flask import jsonify
-from ..utils import InputValidator
-from ..database import GetUserDB , UpdateUserDB , CreateUserDB
+from utils.InputCOPUserValidator import InputValidator
+from utils.ApiKeyValidator import APIKeyValidator
+from database.GetUserDB import GetUserDB
+from database.UpdateUserDB import UpdateUserDB
+from database.CreateUserDB import CreateUserDB
 
 class CreateOrUpdateUserService:
     def create_or_update_user(self, user_data):
@@ -10,6 +13,10 @@ class CreateOrUpdateUserService:
             if not InputValidator.validate_user_data(user_data):
                 return jsonify({"error": "Api_key, correo y contraseña son obligatorios"}), 400
             
+            #Autenticacion para cada request
+            if not APIKeyValidator.validate_api_key(user_data):
+                return jsonify({"error": "Api_key invalida"}), 401
+
             # Verificar si el usuario ya existe
             get_user_db = GetUserDB()
             existing_user = get_user_db.get_user(user_data['usuario'])

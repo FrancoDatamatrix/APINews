@@ -1,13 +1,15 @@
-from ..utils import QueryValidator, CredencialsValidator
-from flask import jsonify, request
-from ..database import CreateScheduleDB, UpdateUserDB
+from utils.queryInputValidator import QueryValidator
+from utils.credencialsValidator import CredencialsValidator
+from flask import jsonify
+from database.CreateScheduleDB import CreateScheduleDB
+from database.UpdateUserDB import UpdateUserDB
 
 class ScheduleService:
     def __init__(self):
         pass
 
     def query(self, user_data):
-        # Validar que se proporcionen los datos obligatorios
+                # Validar que se proporcionen los datos obligatorios
         required_fields = ["usuario", "contraseña", "hora", "palabras"]
         if not all(field in user_data for field in required_fields):
             return jsonify({"error": "usuario, contraseña, hora y palabras clave son obligatorios"}), 400
@@ -17,6 +19,10 @@ class ScheduleService:
         hora = user_data.get("hora")
         palabras = user_data.get("palabras")
         lugar = user_data.get("lugar")
+
+        # Verificar que los campos no estén vacíos
+        if any(value.strip() == "" for value in [usuario, contraseña, palabras]):
+            return jsonify({"error": "Los campos no pueden estar vacíos"}), 400
 
         # Validar las credenciales del usuario
         user = CredencialsValidator.validar_credenciales(usuario, contraseña)
@@ -29,12 +35,11 @@ class ScheduleService:
         if lugar:  # Verifica si se proporcionó el campo "lugar"
             updated_data["lugar"] = lugar
         user_id = user['_id']
-        print(user_id)
         update_user_db.update_user(user_id, updated_data)
 
         # Crear el cronograma
         create_schedule_db = CreateScheduleDB()
-        schedule_id = create_schedule_db.create_schedule(user_id, hora, palabras)
+        schedule_id = create_schedule_db.create_schedule(user_id, hora, palabras,lugar)
 
         if schedule_id is None:
             # Manejar el error, ya que no se devolvió un schedule_id válido

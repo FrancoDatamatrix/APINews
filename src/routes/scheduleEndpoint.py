@@ -1,5 +1,5 @@
 from flask import jsonify, Blueprint, request
-from ..services import ScheduleService
+from services.scheduleService import ScheduleService
 
 schedule_blueprint = Blueprint('schedule', __name__)
 

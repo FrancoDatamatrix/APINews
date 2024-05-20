@@ -8,7 +8,7 @@ class CreateNewsDB:
         self.db_helper = DBmongoHelper()
         self.news_collection = self.db_helper.get_collection("news")
 
-    def create_news(self, news, usuario, palabra):
+    def create_news(self, palabra,usuario,news ):
         # Obtener el timestamp actual
         timestamp = datetime.now()
 
@@ -22,4 +22,5 @@ class CreateNewsDB:
 
         # Insertar las noticias en la base de datos y devolver su ID
         result = self.news_collection.insert_one(news_data)
-        return result.inserted_id
+        news_id = str(result.inserted_id)
+        return news_id

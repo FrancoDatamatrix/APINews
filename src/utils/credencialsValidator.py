@@ -1,4 +1,4 @@
-from ..database import GetUserDB
+from database.GetUserDB import GetUserDB
 import bcrypt
 
 class CredencialsValidator:

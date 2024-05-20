@@ -1,3 +1,0 @@
-# NewsApi
-# NewsApi
-# APINews

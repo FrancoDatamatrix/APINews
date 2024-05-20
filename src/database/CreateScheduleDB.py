@@ -1,5 +1,4 @@
 from .DBMongoHelper import DBmongoHelper
-from flask import jsonify
 from datetime import datetime
 
 class CreateScheduleDB:
@@ -7,7 +6,7 @@ class CreateScheduleDB:
         self.db_helper = DBmongoHelper()
         self.schedule_collection = self.db_helper.get_collection("Schedule")
 
-    def create_schedule(self, user_id, hora, palabras):
+    def create_schedule(self, user_id, hora, palabras,lugar):
         # Obtener el timestamp actual
         timestamp = datetime.timestamp(datetime.now())
 
@@ -16,8 +15,9 @@ class CreateScheduleDB:
             "usuario_id": user_id,
             "hora": hora,
             "palabras": palabras,
+            "lugar": lugar,
             "procesado": None,
-            "timestamp": timestamp
+            "lastUpdatedSchedule": timestamp
         }
 
         # Insertar el nuevo cronograma en la base de datos

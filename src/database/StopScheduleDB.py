@@ -1,4 +1,5 @@
 from .DBMongoHelper import DBmongoHelper
+from bson import ObjectId
 
 class StopScheduleDB:
        def __init__(self):
@@ -7,5 +8,7 @@ class StopScheduleDB:
 
 
        def stop_schedule(self, user_id):
-        result = self.schedule_collection.delete_many({"usuario_id": user_id})
-        return result.deleted_count
+              # Convertir el user_id a ObjectId
+              user_oid = ObjectId(user_id)
+              result = self.schedule_collection.delete_many({"_id": user_oid})
+              return result.deleted_count

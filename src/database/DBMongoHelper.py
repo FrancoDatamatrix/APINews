@@ -9,7 +9,7 @@ class DBmongoHelper:
     
     def __init__(self):
         self.client = MongoClient(os.getenv("DB_URL"))
-        self.db = self.client[os.getenv("DB_NAME")]
+        self.db = self.client["ApiNews"]
         
     def get_collection(self, collection_name):
         return self.db[collection_name]

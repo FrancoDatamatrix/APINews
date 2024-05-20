@@ -1,6 +1,8 @@
-from flask import jsonify, request
-from ..utils import InputDeleteValidator
-from ..database import DeleteUserDB, GetUserDB, StopScheduleDB
+from flask import jsonify
+from utils.inputDeleteValidator import InputDeleteValidator
+from database.DeleteUserDB import DeleteUserDB
+from database.GetUserDB import GetUserDB
+from database.StopScheduleDB import StopScheduleDB
 
 
 class DeleteUserService:
@@ -12,11 +14,11 @@ class DeleteUserService:
 
             # Eliminar el usuario
             delete_user_db = DeleteUserDB()
-            deleted_user_id = delete_user_db.delete_user_by_id(user_id)
+            deleted_user_count = delete_user_db.delete_user_by_id(user_id)
             
             # Verificar si se eliminó algún usuario
-            if not deleted_user_id:
-                return jsonify({"error": "No se encontró ningún usuario con el ID proporcionado"}), 404
+            if deleted_user_count == 0:
+                return jsonify({"error": "No se encontró ningún usuario con el ID proporcionado"}), 400
             
             # Eliminar los schedules asociados al usuario
             stop_schedule_db = StopScheduleDB()
@@ -24,7 +26,7 @@ class DeleteUserService:
 
             return jsonify({
                 "message": "Usuario eliminado exitosamente",
-                "user_id": str(deleted_user_id),
+                "user_id": user_id,
                 "deleted_schedules_count": deleted_schedules_count
             }), 200
         except Exception as e:

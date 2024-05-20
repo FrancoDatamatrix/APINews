@@ -8,13 +8,20 @@ class CreateUserDB:
         self.users_collection = self.db_helper.get_collection("users")
 
     def create_user(self, user_data):
-        print ("ingresando a create_user")
-        # Hashear la contraseña antes de guardarla en la base de datos
-        hashed_password = bcrypt.hashpw(user_data['contraseña'].encode('utf-8'), bcrypt.gensalt())
+        
+        #obtenemos los datos para almacenarlo sin el api-key
+        usuario = user_data.get("usuario")
+        contraseña = user_data.get("contraseña")
+        
+        # Hashear la contraseña
+        hashed_password = bcrypt.hashpw(contraseña.encode('utf-8'), bcrypt.gensalt())
+        
+        new_user = {
+            "usuario" : usuario,
+            "contraseña": hashed_password.decode('utf-8')
+        }
 
-        # Actualizar el diccionario de datos del usuario con la contraseña hasheada
-        user_data['contraseña'] = hashed_password.decode('utf-8')
         # Insertamos el usuario a la base de datos y devolvemos su id
-        result = self.users_collection.insert_one(user_data)
+        result = self.users_collection.insert_one(new_user)
         return result.inserted_id
     

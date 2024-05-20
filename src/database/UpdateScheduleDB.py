@@ -7,17 +7,17 @@ class UpdateScheduleDB:
         self.db_helper = DBmongoHelper()
         self.schedule_collection = self.db_helper.get_collection("Schedule")
 
-    def update_processed_date(self, schedule_ids):
-        # Obtener la fecha actual
-        current_date = datetime.now().date()
+    def update_processed_date(self, schedule_id):
+         # Obtener el timestamp actual en segundos
+        current_timestamp = datetime.now().timestamp()
 
-        # Convertir los IDs de schedules a ObjectId (si es necesario)
-        schedule_object_ids = [ObjectId(schedule_id) for schedule_id in schedule_ids]
+        # Convertir el ID del schedule a ObjectId
+        schedule_object_id = ObjectId(schedule_id)
 
-        # Actualizar el campo 'procesado' con la fecha actual para los schedules especificados
-        update_result = self.schedule_collection.update_many(
-            {"_id": {"$in": schedule_object_ids}},  # Filtrar por los IDs de los schedules a actualizar
-            {"$set": {"procesado": current_date}}  # Actualizar el campo 'procesado' con la fecha actual
+        # Actualizar el campo 'procesado' con la fecha actual para el schedule especificado por ID
+        update_result = self.schedule_collection.update_one(
+            {"_id": schedule_object_id},  # Filtrar por el ID del schedule a actualizar
+            {"$set": {"procesado": current_timestamp}}  # Actualizar el campo 'procesado' con la fecha actual
         )
 
-        return update_result.modified_count  # Devolver el número de schedules actualizados
+        return update_result.modified_count  # Devolver 1 si se actualizó correctamente, 0 si no se encontró el schedule

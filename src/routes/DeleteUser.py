@@ -1,5 +1,5 @@
 from flask import jsonify, Blueprint, request
-from ..services import DeleteUserService
+from services.DeleteUserService import DeleteUserService
 
 delete_blueprint = Blueprint('delete', __name__)
 
@@ -11,7 +11,7 @@ def delete_user():
         # Obtener los datos del usuario de la solicitud DELETE en formato JSON
         user_data = request.json
         
-        # Crear una instancia de UsersEndpoint
+        # Crear una instancia de DeleteUserService
         deleteUserService = DeleteUserService()
         
         # Llamar al método delete_user y pasarle los datos del usuario
