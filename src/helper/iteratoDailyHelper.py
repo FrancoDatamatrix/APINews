@@ -10,8 +10,8 @@ def tarea():
     google_api_services.get_news()
 
 def start_schedule():
-    # Definir la acción que se realizará cada 5 minutos
-    schedule.every(1).minutes.do(tarea)
+    # Definir la acción que se realizará cada 10 minutos
+    schedule.every(10).minutes.do(tarea)
 
     # Programar la acción diariamente
     schedule.every().day.at("00:00").do(lambda: schedule.run_pending())
