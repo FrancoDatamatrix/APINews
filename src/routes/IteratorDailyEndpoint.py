@@ -8,7 +8,6 @@ def endpoint_query():
     try:
         print("ejecutando script de ejecucion diaria...")
         result = "200" if tarea() else "400"
-        
         return result
     except Exception as e:
         return jsonify({"error": str(e)})
