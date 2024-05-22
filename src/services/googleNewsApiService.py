@@ -21,6 +21,8 @@ class GoogleNewsApiService:
         
         success = True
         
+        print ( "antes de entrar a schedules", success)
+        
         # Iterar sobre cada cronograma
         for schedule in schedules:
             hora = schedule.get("hora")
@@ -32,13 +34,17 @@ class GoogleNewsApiService:
                 # Hacer la consulta a la API de Google Search
                 response = GoogleNewsAPI.get_google_search_api(palabra,lugar)
                 
+                print ( "dentro del for", success)
                 # Crear la noticia en la base de datos
                 if response:
                     news_created = self.create_news_db.create_news(palabra, usuario, response)
                     print("Noticias Creadas!")
+                    print ( "if response ", success)
                     if not news_created:
-                        success = False  # Si la creación de noticias falla, marcar como no exitoso
+                        success = False 
+                        print ( "noticia no creada ", success)# Si la creación de noticias falla, marcar como no exitoso
                 # Llamar al método update_processed_date de updateScheduleDB
                 self.update_schedule_db.update_processed_date(schedule.get("_id"))
+        print ("saliendo de la ejecucion", success)
                 
         return success

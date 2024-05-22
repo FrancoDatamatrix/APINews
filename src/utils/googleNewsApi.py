@@ -29,5 +29,5 @@ class GoogleNewsAPI:
             else:
                 break  # Romper el bucle si 'items' no está presente en la respuesta
 
-
+           
         return news_list

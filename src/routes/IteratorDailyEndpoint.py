@@ -1,5 +1,5 @@
 from flask import jsonify, Blueprint
-from helper.iteratoDailyHelper import start_schedule
+from helper.iteratoDailyHelper import tarea
 
 start_schedule_blueprint = Blueprint('start_schedule', __name__)
 
@@ -7,7 +7,8 @@ start_schedule_blueprint = Blueprint('start_schedule', __name__)
 def endpoint_query():
     try:
         print("ejecutando script de ejecucion diaria...")
-        start_schedule()
+        result = "200" if tarea() else "400"
         
+        return result
     except Exception as e:
         return jsonify({"error": str(e)})
