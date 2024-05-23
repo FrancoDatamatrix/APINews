@@ -8,7 +8,8 @@ class CreateScheduleDB:
 
     def create_schedule(self, user_id, hora, palabras,lugar):
         # Obtener el timestamp actual
-        timestamp = datetime.timestamp(datetime.now())
+        
+        timestamp = int(datetime.timestamp(datetime.now()))
 
         # Crear un documento para el nuevo cronograma
         schedule_data = {
