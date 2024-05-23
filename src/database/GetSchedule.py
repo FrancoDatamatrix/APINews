@@ -9,16 +9,16 @@ class GetScheduleDB:
        def get_schedule(self):
         
         # Obtener el timestamp actual en segundos
-        current_timestamp = datetime.now().timestamp()
+        current_timestamp = int(datetime.now().timestamp())
         current_hour = int(datetime.now().strftime('%H%M'))
     
         # Consultar los cronogramas en la base de datos
         schedules = self.schedule_collection.find({
             "$or": [
-                {"procesado": None},  # Filtrar los schedules no procesados
-                {"procesado": {"$ne": None, "$lte": current_timestamp - 86400}}  # Filtrar los schedules procesados y cuya diferencia de tiempo sea menor a 86400 segundos (24 horas)
-            ],
-            "hora": {"$lte": current_hour}  # Filtrar las horas iguales o menores a la actual
+                {"procesado": None} # Filtrar los schedules no procesados
+                # {"procesado": {"$ne": None, "$lte": current_timestamp - 86400}}  # Filtrar los schedules procesados y cuya diferencia de tiempo sea menor a 86400 segundos (24 horas)
+            ]
+            # "hora": {"$lte": current_hour}  # Filtrar las horas iguales o menores a la actual
         })
 
         # Convertir el cursor a una lista de diccionarios
