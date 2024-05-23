@@ -17,7 +17,7 @@ class GoogleNewsApiService:
         schedules = self.get_schedule_db.get_schedule()
         
         if not schedules:
-            return False
+            return "No hay ningun schedule"
         
         success = True
         
@@ -28,20 +28,21 @@ class GoogleNewsApiService:
             hora = schedule.get("hora")
             usuario = schedule.get("usuario_id")
             palabras, lugar = self.get_user_words_db.get_words(usuario)
-            
+            print("iterando schedules")
             # Iterar sobre cada palabra en el arreglo de palabras
             for palabra in palabras:
                 # Hacer la consulta a la API de Google Search
                 response = GoogleNewsAPI.get_google_search_api(palabra,lugar)
-                
+                print("iterando palabras")
                 # Crear la noticia en la base de datos
                 if response:
                     news_created = self.create_news_db.create_news(palabra, usuario, response)
                     print("Noticias Creadas!")
 
                     if not news_created:
+                        print("no se crearon noticias")
                         success = False # Si la creación de noticias falla, marcar como no exitoso
                         
                 self.update_schedule_db.update_processed_date(schedule.get("_id")) # Llamar al método update_processed_date de updateScheduleDB
                 
-        return success
+        return "Schedule completado"
