@@ -1,4 +1,5 @@
 from .DBMongoHelper import DBmongoHelper
+from utils.second_Converter import SecondConverter
 from datetime import datetime
 
 class CreateScheduleDB:
@@ -10,11 +11,14 @@ class CreateScheduleDB:
         # Obtener el timestamp actual
         
         timestamp = int(datetime.timestamp(datetime.now()))
-
+        
+        # convertimos las horas a segundos
+        segundos_totales =  SecondConverter.converter(hora)
+    
         # Crear un documento para el nuevo cronograma
         schedule_data = {
             "usuario_id": user_id,
-            "hora": hora,
+            "hora": segundos_totales,
             "palabras": palabras,
             "lugar": lugar,
             "procesado": None,
