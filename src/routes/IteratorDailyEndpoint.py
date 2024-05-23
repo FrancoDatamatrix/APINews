@@ -7,7 +7,7 @@ start_schedule_blueprint = Blueprint('start_schedule', __name__)
 def endpoint_query():
     try:
         print("ejecutando script de ejecucion diaria...")
-        result = "200" if tarea() else "400"
+        result = "funciono 200" if tarea() else "fallo 400"
         return result
     except Exception as e:
         return jsonify({"error": str(e)})
