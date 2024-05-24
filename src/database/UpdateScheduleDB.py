@@ -9,7 +9,7 @@ class UpdateScheduleDB:
 
     def update_processed_date(self, schedule_id):
          # Obtener el timestamp actual en segundos
-        current_timestamp = datetime.now().timestamp()
+        current_timestamp = int(datetime.now().timestamp())
 
         # Convertir el ID del schedule a ObjectId
         schedule_object_id = ObjectId(schedule_id)

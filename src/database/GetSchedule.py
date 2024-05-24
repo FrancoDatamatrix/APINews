@@ -23,8 +23,8 @@ class GetScheduleDB:
         # Consultar los cronogramas en la base de datos
         schedules = self.schedule_collection.find({
             "$or": [
-                {"procesado": None}                                                  # Filtrar los schedules no procesados
-                # {"procesado": {"$ne": None, "$lte": current_timestamp - 86400}}    # Filtrar los schedules procesados y cuya diferencia de tiempo sea menor a 86400 segundos (24 horas)
+                {"procesado": None},                                                  # Filtrar los schedules no procesados
+                {"procesado": {"$ne": None, "$lte": current_timestamp - 86400}}      # Filtrar los schedules procesados y cuya diferencia de tiempo sea menor a 86400 segundos (24 horas)
             ],
             "$expr": {                                                               # $expr para permitir el uso de expresiones de agregación en la consulta. 
                 "$and": [                                                            # $and combina las dos condiciones: la diferencia debe ser menor o igual a 300 y mayor o igual a -300.
