@@ -20,7 +20,7 @@ La API REST de Creacion de noticias permite a los usuarios crear y almacenar not
   {
 	"usuario":"usuario existente",
     "contraseña":"contraseña existente",
-    "hora":1500, "(la hora debe estar en formato de 24 horas sin los ':', ejemplo 1500 para las 3 de la tarde)"
+    "hora":"15:00", "(la hora debe estar en formato de 24)"
 	  "palabras":"termino a buscar",
     "lugar":"CO", "(codigo pais de dos letras, ejemplo CO para colombia)"
 }
