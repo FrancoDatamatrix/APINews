@@ -18,4 +18,8 @@ class GetUserDB:
 
         # Si no se encuentra por ID, buscar por nombre de usuario
         user = self.users_collection.find_one({"usuario": identifier})
+        
+        # Cerrar la conexión después de obtener los datos
+        self.db_helper.close()
+        
         return user

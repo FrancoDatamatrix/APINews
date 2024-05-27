@@ -20,6 +20,9 @@ class UpdateUserDB:
         # Actualizar el usuario en la base de datos
         result = self.users_collection.update_one({'_id': user_oid}, {'$set': updated_data})
         
+        # Asegurarse de cerrar la conexión después de completar la operación
+        self.db_helper.close()
+        
         # Comprobar si se realizó la actualización correctamente
         if result.modified_count > 0:
             return "Usuario actualizado correctamente."

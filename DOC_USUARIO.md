@@ -22,6 +22,7 @@ La API REST de Creacion de noticias permite a los usuarios crear y almacenar not
     "contraseña":"contraseña existente",
     "hora":"15:00", "(la hora debe estar en formato de 24)"
 	  "palabras":"termino a buscar",
+    "tema": "tema de la busqueda", "(con este campo agrupamos busquedas en relacion con los terminos de busqueda. ejempo: si buscamos casas, departamentos, etc. el tema es bienes raices o viviendas)"
     "lugar":"CO", "(codigo pais de dos letras, ejemplo CO para colombia)"
 }
 **visite la lista de paises disponibles en https://developers.google.com/custom-search/docs/json_api_reference?hl=es-419#countryCodes** 

@@ -10,13 +10,14 @@ class ScheduleService:
 
     def query(self, user_data):
                 # Validar que se proporcionen los datos obligatorios
-        required_fields = ["usuario", "contraseña", "hora", "palabras"]
+        required_fields = ["usuario", "contraseña", "hora","tema","palabras"]
         if not all(field in user_data for field in required_fields):
-            return jsonify({"error": "usuario, contraseña, hora y palabras clave son obligatorios"}), 400
+            return jsonify({"error": "usuario, contraseña, hora, tema y palabras clave son obligatorios"}), 400
 
         usuario = user_data.get("usuario")
         contraseña = user_data.get("contraseña")
         hora = user_data.get("hora")
+        tema = user_data.get("tema")
         palabras = user_data.get("palabras")
         lugar = user_data.get("lugar")
 
@@ -39,7 +40,7 @@ class ScheduleService:
 
         # Crear el cronograma
         create_schedule_db = CreateScheduleDB()
-        schedule_id = create_schedule_db.create_schedule(user_id, hora, palabras,lugar)
+        schedule_id = create_schedule_db.create_schedule(user_id, hora,tema, palabras,lugar)
 
         if schedule_id is None:
             # Manejar el error, ya que no se devolvió un schedule_id válido

@@ -1,6 +1,4 @@
 from flask import Flask
-import schedule
-import time
 from services.googleNewsApiService import GoogleNewsApiService
 
 app = Flask(__name__)

@@ -1,12 +1,14 @@
 from database.GetSchedule import GetScheduleDB
 from database.GetUserWordsDB import GetUserWordsDB
 from database.CreateNewsGoogleDB import CreateNewsDB
+from database.DBMongoHelper import DBmongoHelper
 from utils.googleNewsApi import GoogleNewsAPI
 from database.UpdateScheduleDB import UpdateScheduleDB
 import logging
 
 class GoogleNewsApiService:
     def __init__(self):
+        self.db_helper = DBmongoHelper()
         self.get_schedule_db = GetScheduleDB()
         self.get_user_words_db = GetUserWordsDB()
         self.create_news_db = CreateNewsDB()
@@ -28,6 +30,7 @@ class GoogleNewsApiService:
             for schedule in schedules:
                 hora = schedule.get("hora")
                 usuario = schedule.get("usuario_id")
+                tema = schedule.get("tema")
                 palabras, lugar = self.get_user_words_db.get_words(usuario)
                 logging.info(f"Iterando schedules para usuario {usuario} a las {hora}")
                 
@@ -42,7 +45,7 @@ class GoogleNewsApiService:
                         logging.warning("No hay respuesta de Google")
                         continue  # Continuar con la siguiente palabra
                     
-                    news_created = self.create_news_db.create_news(palabra, usuario, response)
+                    news_created = self.create_news_db.create_news(usuario,tema, palabra, response)
                     if news_created:
                         logging.info("Noticias creadas!")
                     else:
@@ -51,6 +54,9 @@ class GoogleNewsApiService:
 
                 # Llamar al método update_processed_date de updateScheduleDB
                 self.update_schedule_db.update_processed_date(schedule.get("_id"))
+                
+            # Asegurarse de cerrar la conexión después de completar la operación
+            self.db_helper.close()
             
             return "Schedule completado" if success else "Schedule completado con errores"
         

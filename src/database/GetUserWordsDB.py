@@ -20,3 +20,6 @@ class GetUserWordsDB:
                 return None, None
         except:
             return None, None
+        finally:
+            # Cerrar la conexión después de completar la operación
+            self.db_helper.close()

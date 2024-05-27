@@ -19,5 +19,7 @@ class UpdateScheduleDB:
             {"_id": schedule_object_id},  # Filtrar por el ID del schedule a actualizar
             {"$set": {"procesado": current_timestamp}}  # Actualizar el campo 'procesado' con la fecha actual
         )
+        # Asegurarse de cerrar la conexión después de completar la operación
+        self.db_helper.close()
 
         return update_result.modified_count  # Devolver 1 si se actualizó correctamente, 0 si no se encontró el schedule

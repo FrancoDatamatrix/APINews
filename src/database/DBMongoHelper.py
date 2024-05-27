@@ -13,3 +13,6 @@ class DBmongoHelper:
         
     def get_collection(self, collection_name):
         return self.db[collection_name]
+    
+    def close(self):
+        self.client.close()

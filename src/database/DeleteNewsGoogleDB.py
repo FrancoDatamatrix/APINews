@@ -7,10 +7,14 @@ class DeleteNewsDB:
         self.news_collection = self.db_helper.get_collection("news")
 
     def delete_news_by_id(self, news_id):
-        # Convertir el ID de la noticia a ObjectId
-        news_oid = ObjectId(news_id)
+        try:
+            # Convertir el ID de la noticia a ObjectId
+            news_oid = ObjectId(news_id)
 
-        # Eliminar la noticia por su ObjectId (_id)
-        result = self.news_collection.delete_one({"_id": news_oid})
+            # Eliminar la noticia por su ObjectId (_id)
+            result = self.news_collection.delete_one({"_id": news_oid})
 
-        return result.deleted_count > 0
+            return result.deleted_count > 0
+        finally:
+            # Asegurarse de cerrar la conexión después de completar la operación
+            self.db_helper.close()
