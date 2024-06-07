@@ -7,17 +7,17 @@ from crontab import CronTab
 cron_blueprint = Blueprint('cron', __name__)
 
 #Nombre del comando del cronjon que necesitamos
-COMMAND = "python3 /home/data_news/APINews/src/rotes/iterator.py"
+COMMAND = "python3 /home/data-news/APINews/src/rotes/iterator.py"
 
 #Ruta para obtener el Cronjob
 @cron_blueprint.route('/cronjob', methods=['GET'])
 # @jwt_required()
 def get_cronjob():
     #Autenticamos con JWT y verificamos que sea Admin
-    current_user = get_jwt_identity()
-    user_role = GetUserRol.get_user_role(current_user)
-    if user_role != "admin":
-        return jsonify({"msg": "Solo Administradores!"}), 403
+    # current_user = get_jwt_identity()
+    # user_role = GetUserRol.get_user_role(current_user)
+    # if user_role != "admin":
+    #     return jsonify({"msg": "Solo Administradores!"}), 403
     
     cron = CronTab(user=True)
     for job in cron:
