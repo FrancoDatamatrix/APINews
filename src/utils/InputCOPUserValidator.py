@@ -1,6 +1,7 @@
 class InputValidator:
+    
+    REQUIRED_FIELDS = ['usuario', 'contraseña','rol']
+    
     @staticmethod
     def validate_user_data(user_data):
-        if 'usuario' not in user_data or 'contraseña' not in user_data or 'api_key' not in user_data:
-            return False
-        return True
+        return all(field in user_data for field in InputValidator.REQUIRED_FIELDS)

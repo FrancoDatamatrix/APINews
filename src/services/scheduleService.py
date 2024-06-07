@@ -8,27 +8,20 @@ class ScheduleService:
     def __init__(self):
         pass
 
-    def query(self, user_data):
-                # Validar que se proporcionen los datos obligatorios
-        required_fields = ["usuario", "contraseña", "hora","tema","palabras"]
-        if not all(field in user_data for field in required_fields):
-            return jsonify({"error": "usuario, contraseña, hora, tema y palabras clave son obligatorios"}), 400
+    def query(self, schedule_data,user):
+        # Validar que se proporcionen los datos obligatorios
+        required_fields = ["hora","tema","palabras"]
+        if not all(field in schedule_data for field in required_fields):
+            return jsonify({"error": "hora, tema y palabras clave son obligatorios"}), 400
 
-        usuario = user_data.get("usuario")
-        contraseña = user_data.get("contraseña")
-        hora = user_data.get("hora")
-        tema = user_data.get("tema")
-        palabras = user_data.get("palabras")
-        lugar = user_data.get("lugar")
+        hora = schedule_data.get("hora")
+        tema = schedule_data.get("tema")
+        palabras = schedule_data.get("palabras")
+        lugar = schedule_data.get("lugar")
 
         # Verificar que los campos no estén vacíos
-        if any(value.strip() == "" for value in [usuario, contraseña, palabras]):
+        if any(value.strip() == "" for value in [palabras,tema,hora]):
             return jsonify({"error": "Los campos no pueden estar vacíos"}), 400
-
-        # Validar las credenciales del usuario
-        user = CredencialsValidator.validar_credenciales(usuario, contraseña)
-        if not user:
-            return jsonify({"error": "Credenciales de usuario incorrectas"}), 401
 
         # Actualizar el usuario para agregar las palabras clave
         update_user_db = UpdateUserDB()

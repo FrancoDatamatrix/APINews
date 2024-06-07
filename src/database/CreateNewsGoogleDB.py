@@ -15,7 +15,7 @@ class CreateNewsDB:
 
             # Crear un documento para el modelo de DB
             news_data = {
-                "usuario": usuario,
+                "usuario_id": usuario,
                 "tema": tema,
                 "palabra": palabra,
                 "news": news,
