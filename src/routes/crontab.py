@@ -19,7 +19,7 @@ def get_cronjob():
     # if user_role != "admin":
     #     return jsonify({"msg": "Solo Administradores!"}), 403
     
-    cron = CronTab()
+    cron = CronTab(user=True)
     for job in cron:
         if job.command == COMMAND:
             return jsonify({
