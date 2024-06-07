@@ -7,7 +7,7 @@ from crontab import CronTab
 cron_blueprint = Blueprint('cron', __name__)
 
 #Nombre del comando del cronjon que necesitamos
-COMMAND = "python3 /home/data-news/APINews/src/rotes/iterator.py"
+COMMAND = "python3 /home/data-news/APINews/src/helper/iteratoDailyHelper.py"
 
 #Ruta para obtener el Cronjob
 @cron_blueprint.route('/cronjob', methods=['GET'])
