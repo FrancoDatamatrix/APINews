@@ -1,3 +1,5 @@
+import os
+from pymongo import MongoClient
 from database.GetSchedule import GetScheduleDB
 from database.GetUserWordsDB import GetUserWordsDB
 from database.CreateNewsGoogleDB import CreateNewsDB
@@ -8,7 +10,7 @@ import logging
 
 class GoogleNewsApiService:
     def __init__(self):
-        self.db_helper = DBmongoHelper()
+        self.client = MongoClient(os.getenv("DB_URL"))
         self.get_schedule_db = GetScheduleDB()
         self.get_user_words_db = GetUserWordsDB()
         self.create_news_db = CreateNewsDB()
@@ -28,14 +30,17 @@ class GoogleNewsApiService:
             
             # Iterar sobre cada cronograma
             for schedule in schedules:
+                logging.info(f"Info Schedule {schedule}")
                 hora = schedule.get("hora")
                 usuario = schedule.get("usuario_id")
                 tema = schedule.get("tema")
-                palabras, lugar = self.get_user_words_db.get_words(usuario)
+                palabras = schedule.get("palabras")
+                arrPalabras = palabras.split(',')
+                lugar = schedule.get("lugar")
                 logging.info(f"Iterando schedules para usuario {usuario} a las {hora}")
                 
                 # Iterar sobre cada palabra en el arreglo de palabras
-                for palabra in palabras:
+                for palabra in arrPalabras:
                     # Hacer la consulta a la API de Google Search
                     response = GoogleNewsAPI.get_google_search_api(palabra, lugar)
                     logging.info(f"Iterando palabras: {palabra} en lugar: {lugar}")
@@ -56,7 +61,7 @@ class GoogleNewsApiService:
                 self.update_schedule_db.update_processed_date(schedule.get("_id"))
                 
             # Asegurarse de cerrar la conexión después de completar la operación
-            self.db_helper.close()
+            self.client.close()
             
             return "Schedule completado" if success else "Schedule completado con errores"
         

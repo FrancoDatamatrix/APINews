@@ -17,6 +17,11 @@ users_blueprint = Blueprint('/users', __name__)
 @jwt_required()
 def get_users():
     try:  
+        #Autenticamos con JWT y verificamos que sea Admin
+        current_user = get_jwt_identity()
+        user_role = GetUserRol.get_user_role(current_user)
+        if user_role != "admin":
+            return jsonify({"msg": "Solo Administradores!"}), 403
          # Crear una instancia de GetAllUserDB
         getUsers = GetAllUserDB()
         
@@ -37,34 +42,38 @@ def get_users():
 @jwt_required()
 def get_users_by_id(user_id):
     try:
-        
         page = int(request.args.get('page', 1))
         
-        #info completa del usuario
+        # Información completa del usuario
         user_complete = {}
           
-        # Crear las instacias necesarias
+        # Crear las instancias necesarias
         getUser = GetUserDB()
         getSchedule = GetScheduleByUserDB()
         getNews = GetNewsByUserDB()
         db_helper = DBmongoHelper()
         
         # Llamar al método get_user y pasarle el id
-        user_complete["user"] = getUser.get_user(user_id)
+        user_complete = getUser.get_user(user_id)
         
         # Verificar si el usuario fue encontrado
-        if "error" in user_complete["user"]:
-            return jsonify(user_complete["user"]), 404
+        if "error" in user_complete:
+            return jsonify(user_complete), 404
         
-        #Llamar al metodo get_user_schedule y pasarle el id
-        user_complete["schedules"] = getSchedule.get_user_schedule(user_id)
+        id = user_complete["_id"]
         
-        #Llamar al metodo get_user_news y pasarle el id y la pagina
-        user_complete["news"] = getNews.get_user_news(user_id,page=page)
+        # Llamar al método get_user_schedule y pasarle el id
+        user_complete["schedules"] = getSchedule.get_user_schedule(user_complete)
+        
+        # Llamar al método get_user_news y pasarle el id y la página
+        user_complete["news"] = getNews.get_user_news(user_complete, page=page)
     
-        # Convertir los resultados a JSON usando json_util
-        response = json_util.dumps(user_complete)
+        # Convertir el resultado a un arreglo que contenga un solo objeto
+        response_data = [user_complete]
         
+        # Convertir los resultados a JSON usando json_util
+        response = json_util.dumps(response_data)
+    
         # Devolver la respuesta
         return Response(response, mimetype='application/json')
     except Exception as e:
@@ -111,7 +120,6 @@ def delete_user():
         #verificamos que sea admin antes de crear un nuevo usuario
         current_user = get_jwt_identity()
         user_role = GetUserRol.get_user_role(current_user)
-        print(user_role)
         if user_role != 'admin':
             return jsonify({"msg": "Solo Administradores!"}), 403
         # Obtener el ID del usuario de la solicitud DELETE en formato JSON
@@ -121,17 +129,18 @@ def delete_user():
             return jsonify({"error": "El ID del usuario es necesario."}), 400
         
         # Obtener los datos del usuario de la solicitud DELETE en formato JSON
-        user_data = request.json
+        user_id = request.json.get("id")
+        usuario = request.json.get("usuario")
         
         # Crear una instancia de DeleteUserService
         deleteUserService = DeleteUserService()
         
         # Llamar al método delete_user y pasarle los datos del usuario
-        response = deleteUserService.delete_user(user_data['id'])
+        response = deleteUserService.delete_user(user_id, usuario)
         
         # Verificar el resultado de la eliminación y devolver la respuesta adecuada
         if response:
-            return jsonify({"message": "Usuario eliminado correctamente."}), 200
+            return response
         else:
             return jsonify({"message": "No se encontró el usuario o no se pudo eliminar."}), 404
     except Exception as e:

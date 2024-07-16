@@ -1,23 +1,30 @@
-from .DBMongoHelper import DBmongoHelper
+from pymongo import MongoClient
+import os
 
 class GetAllScheduleDB:
     def __init__(self):
-        self.db_helper = DBmongoHelper()
-        self.schedule_collection = self.db_helper.get_collection("Schedule")
+        self.client = MongoClient(os.getenv("DB_URL"))
+        
 
     def get_all_schedule(self):
-        # Inicializar la variable schedule
-        schedule = []
-    
         try:
-            # Traemos todos los schedules de la base de datos
-            schedule_cursor = self.schedule_collection.find({})
-            users = list(schedule_cursor)
+            # Obtener todas las bases de datos
+            databases = self.client.list_database_names()
+        
+            all_schedules = []
+        
+            # Recorrer cada base de datos y obtener la colección "schedule"
+            for db_name in databases:
+                db = self.client[db_name]
+                if "Schedule" in db.list_collection_names():
+                    schedule_collection = db["Schedule"]
+                    schedules = list(schedule_collection.find({}))
+                    all_schedules.extend(schedules)
         except Exception as e:
             # Manejar excepciones específicas si es necesario
-            print(f"Se produjo un error al obtener los schedules: {e}")
+                print(f"Se produjo un error al obtener los schedules: {e}")
         finally:
             # Cerrar la conexión después de obtener los datos
-            self.db_helper.close()
+            self.client.close()
         
-        return users
+        return all_schedules

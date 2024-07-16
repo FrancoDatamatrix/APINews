@@ -7,17 +7,17 @@ from crontab import CronTab
 cron_blueprint = Blueprint('cron', __name__)
 
 #Nombre del comando del cronjon que necesitamos
-COMMAND = "python3 /home/data-news/APINews/src/helper/iteratoDailyHelper.py"
+COMMAND = "python3 /home/data_news/APINews/src/helper/iteratoDailyHelper.py"
 
 #Ruta para obtener el Cronjob
 @cron_blueprint.route('/cronjob', methods=['GET'])
-# @jwt_required()
+@jwt_required()
 def get_cronjob():
-    #Autenticamos con JWT y verificamos que sea Admin
-    # current_user = get_jwt_identity()
-    # user_role = GetUserRol.get_user_role(current_user)
-    # if user_role != "admin":
-    #     return jsonify({"msg": "Solo Administradores!"}), 403
+    # Autenticamos con JWT y verificamos que sea Admin
+    current_user = get_jwt_identity()
+    user_role = GetUserRol.get_user_role(current_user)
+    if user_role != "admin":
+        return jsonify({"msg": "Solo Administradores!"}), 403
     
     cron = CronTab(user=True)
     for job in cron:
@@ -29,7 +29,7 @@ def get_cronjob():
                 'month': job.month.render(),
                 'day_of_week': job.dow.render()
             })
-    return jsonify({'error': 'Cronjob no encontrado'})
+    return jsonify({'error': 'Cronjob no encontrado'}), 404
 
 
 
@@ -53,10 +53,7 @@ def update_cronjob():
     job_updated = False
     for job in cron:
         if job.command == COMMAND:
-            job.hour.on(new_hour)
-            job.day.on(new_day_of_month)
-            job.month.on(new_month)
-            job.dow.on(new_day_of_week)
+            job.setall('*/10', new_hour, new_day_of_month, new_month, new_day_of_week)
             job_updated = True
             cron.write()
             break

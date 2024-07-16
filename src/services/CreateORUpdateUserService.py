@@ -4,21 +4,14 @@ from utils.RolValidator import RolValidator
 from database.GetUserDB import GetUserDB
 from database.UpdateUserDB import UpdateUserDB
 from database.CreateUserDB import CreateUserDB
+from database.CreateDBForUser import CreateDB
 import logging
 
 class CreateOrUpdateUserService:
     def create_or_update_user(self, user_data):
         try:
-            
-            # Verificar que se proporcionen los datos utilizando InputValidator
-            if not InputValidator.validate_user_data(user_data):
-                return jsonify({"error": "Correo, contraseña y rol son obligatorios"}), 400
-            
-            
-            #Verificacion de rol
-            if not RolValidator.validate_rol(user_data["rol"]):
-                return jsonify({"error": "Rol invalido"}), 401
-
+            if not "usuario" in user_data:
+                return jsonify({"error": "usuario obligatorio"}), 400
             # Verificar si el usuario ya existe
             get_user_db = GetUserDB()
             existing_user = get_user_db.get_user(user_data['usuario'])
@@ -32,10 +25,22 @@ class CreateOrUpdateUserService:
                 return jsonify({"message": "Usuario actualizado exitosamente", "user_id": str(user_id)}), 200
             else:
                 # Si el usuario no existe, créalo
+                # Verificar que se proporcionen los datos utilizando InputValidator
+                if not InputValidator.validate_user_data(user_data):
+                    return jsonify({"error": "Correo, contraseña y rol son obligatorios"}), 400
+            
+            
+                #Verificacion de rol
+                if not RolValidator.validate_rol(user_data["rol"]):
+                    return jsonify({"error": "Rol invalido"}), 401
+
                 logging.info("El usuario no existe")
                 create_user_db = CreateUserDB()
                 user_id = create_user_db.create_user(user_data)
-                return jsonify({"message": "Usuario creado exitosamente", "user_id": str(user_id)}), 201
+                #crear Base de datos para el usuario
+                create_user_db = CreateDB()
+                database = create_user_db.create_db(user_data)
+                return jsonify({"message": "Usuario creado exitosamente", "user_id": str(user_id), "credenciales_DB": database}), 201
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 

@@ -1,14 +1,30 @@
+import os
+from bson import ObjectId
+from pymongo import MongoClient
 from .DBMongoHelper import DBmongoHelper
 from utils.second_Converter import SecondConverter
 from datetime import datetime
 
 class CreateScheduleDB:
     def __init__(self):
-        self.db_helper = DBmongoHelper()
-        self.schedule_collection = self.db_helper.get_collection("Schedule")
+        self.db_admin = DBmongoHelper()
+        self.users_collection = self.db_admin.get_collection("users")
+        self.client = MongoClient(os.getenv("DB_URL"))
 
     def create_schedule(self, user_id, hora, tema, palabras, lugar):
         try:
+            
+            if ObjectId.is_valid(user_id):
+                user_oid = ObjectId(user_id)
+                userComplete = self.users_collection.find_one({"_id": user_oid})
+                
+            if userComplete["rol"] == "user":
+                user = userComplete["usuario"]
+                user_db = self.client[f"{user}_db"]
+                schedule_collection = user_db["Schedule"]
+            else:
+                schedule_collection = self.db_admin.get_collection("Schedule")
+                
             # Obtener el timestamp actual
             timestamp = int(datetime.timestamp(datetime.now()))
             
@@ -27,7 +43,7 @@ class CreateScheduleDB:
             }
 
             # Insertar el nuevo cronograma en la base de datos
-            result = self.schedule_collection.insert_one(schedule_data)
+            result = schedule_collection.insert_one(schedule_data)
 
             # Obtener el ID del nuevo cronograma creado y convertirlo a str
             schedule_id = str(result.inserted_id)
@@ -36,4 +52,4 @@ class CreateScheduleDB:
             return schedule_id if schedule_id else None
         finally:
             # Asegurarse de cerrar la conexión después de completar la operación
-            self.db_helper.close()
+            self.client.close()

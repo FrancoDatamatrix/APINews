@@ -1,6 +1,7 @@
 import bcrypt
 from .DBMongoHelper import DBmongoHelper
 
+
 class CreateUserDB:
     def __init__(self):
         # conexión a base de datos y a la colección users

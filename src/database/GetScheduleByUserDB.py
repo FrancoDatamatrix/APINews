@@ -1,18 +1,28 @@
+import os
 from bson import ObjectId
 from bson.errors import InvalidId
+from pymongo import MongoClient
+from .GetUserDB import GetUserDB
 from .DBMongoHelper import DBmongoHelper
+
 
 class GetScheduleByUserDB:
     def __init__(self):
-        self.db_helper = DBmongoHelper()
-        self.schedule_collection = self.db_helper.get_collection("Schedule")
+        self.client = MongoClient(os.getenv("DB_URL"))
+        # self.user_collection = GetUserDB()
 
-    def get_user_schedule(self, identifier):
+    def get_user_schedule(self, user_complete):
         try:
-            # Convertir el identificador a ObjectId
-            user_oid = ObjectId(identifier)
+            
+            if user_complete:
+                user = user_complete["usuario"]
+                user_db = self.client[f"{user}_db"]
+                schedule_collection = user_db["Schedule"]
+                
             # Intentar buscar los schedules por usuario (ID)
-            schedule = self.schedule_collection.find({"usuario_id": user_oid})
+            schedule = schedule_collection.find({})
+            
+            
             if schedule:
                 return schedule
             else:

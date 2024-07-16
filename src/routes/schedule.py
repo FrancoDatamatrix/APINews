@@ -1,6 +1,7 @@
 from flask import jsonify, Blueprint, request, Response
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from services.scheduleService import ScheduleService
+from utils.GetUserRol import GetUserRol
 from database.GetAllScheduleDB import GetAllScheduleDB
 from database.DeleteScheduleDB import DeleteScheduleDB
 from database.GetScheduleByID import GetScheduleByID
@@ -16,6 +17,11 @@ schedule_blueprint = Blueprint('schedule', __name__)
 @jwt_required()
 def get_schedule():
     try:
+        current_user = get_jwt_identity()
+        user_role = GetUserRol.get_user_role(current_user)
+        
+        if user_role != "admin":
+            return jsonify({"msg": "Solo Administradores!"}), 403
         
          # Crear una instancia de GetAllScheduleDB
         getSchedule = GetAllScheduleDB()

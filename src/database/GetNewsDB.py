@@ -15,12 +15,12 @@ class GetNewsDB:
             if news:
                 return news
             else:
-                return {"error": "Schedule no encontrado"}
+                return {"error": "Noticias no encontradas"}
         except InvalidId:
             return {"error": "ID no válido"}
         except Exception as e:
-            print(f"Se produjo un error al obtener el schedule: {e}")
-            return {"error": "Error al obtener el schedule"}
+            print(f"Se produjo un error al obtener las noticias: {e}")
+            return {"error": "Error al obtener las noticias"}
         finally:
             # Asegurarse de cerrar la conexión después de completar la operación
             self.db_helper.close()

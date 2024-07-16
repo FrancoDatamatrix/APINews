@@ -3,10 +3,11 @@ from utils.inputDeleteValidator import InputDeleteValidator
 from database.DeleteUserDB import DeleteUserDB
 from database.GetUserDB import GetUserDB
 from database.StopScheduleDB import StopScheduleDB
+from database.DropDatabaseUser import DropDB
 
 
 class DeleteUserService:
-    def delete_user(self, user_id):
+    def delete_user(self, user_id, usuario):
         try:
             # Verificar que se proporcionen el ID utilizando InputValidator
             if not InputDeleteValidator.validate_id_user_data(user_id):
@@ -23,11 +24,16 @@ class DeleteUserService:
             # Eliminar los schedules asociados al usuario
             stop_schedule_db = StopScheduleDB()
             deleted_schedules_count = stop_schedule_db.stop_schedule(user_id)
-
+            
+            #Eliminar la base de datos
+            drop_database = DropDB()
+            drop_response = drop_database.drop_db(usuario)
+            
             return jsonify({
                 "message": "Usuario eliminado exitosamente",
                 "user_id": user_id,
-                "deleted_schedules_count": deleted_schedules_count
+                "deleted_schedules_count": deleted_schedules_count,
+                "database": drop_response
             }), 200
         except Exception as e:
             return jsonify({"error": str(e)}), 500
