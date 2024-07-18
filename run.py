@@ -32,8 +32,6 @@ def refresh_expiring_jwts(response):
         return response
     
     
-
-# app.register_blueprint(start_schedule_blueprint, url_prefix="/api/v1")
 app.register_blueprint(users_blueprint, url_prefix="/api/v1")
 app.register_blueprint(schedule_blueprint, url_prefix="/api/v1")
 app.register_blueprint(news_blueprint, url_prefix="/api/v1")
@@ -42,4 +40,4 @@ app.register_blueprint(cron_blueprint, url_prefix="/api/v1")
 
         
 if __name__ == "__main__":
-    app.run(host='localhost', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=8000)
