@@ -11,7 +11,7 @@ from src.routes.crontab import cron_blueprint
 
 app = Flask(__name__)
 
-CORS(app,supports_credentials=True,origins=["http://localhost:3000"])
+CORS(app,supports_credentials=True,origins=["http://4.227.180.95:80"])
 app.config.from_object('config.Config')
 
 jwt = JWTManager(app)
@@ -32,6 +32,7 @@ def refresh_expiring_jwts(response):
         return response
     
     
+
 app.register_blueprint(users_blueprint, url_prefix="/api/v1")
 app.register_blueprint(schedule_blueprint, url_prefix="/api/v1")
 app.register_blueprint(news_blueprint, url_prefix="/api/v1")
