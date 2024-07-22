@@ -7,7 +7,7 @@ class GetAllNewsDB:
         self.client = MongoClient(os.getenv("DB_URL"))
         # self.news_collection = self.db_helper.get_collection("news")
 
-    def get_all_news(self, page=1, page_size=1):
+    def get_all_news(self, page=1, page_size=1, sort_by='timestamp', sort_order=-1):
         
         # Obtener todas las bases de datos
         databases = self.client.list_database_names()
@@ -27,7 +27,7 @@ class GetAllNewsDB:
                 db = self.client[db_name]
                 if "news" in db.list_collection_names():
                     news_collection = db["news"]
-                    news_cursor = list(news_collection.find({}).skip(start_index).limit(page_size))
+                    news_cursor = list(news_collection.find({}).sort(sort_by, sort_order).skip(start_index).limit(page_size))
                     news.extend(news_cursor)
                     
                     

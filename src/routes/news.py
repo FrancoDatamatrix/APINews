@@ -32,13 +32,13 @@ def get_news():
             getNews = GetFilteredNewsDB()
             
             # Llamar al método get_filtered_news con los parámetros obtenidos
-            news = getNews.get_filtered_news(tema=tema, usuario_id=usuario_id, page=page, page_size=page_size)
+            news = getNews.get_filtered_news(tema=tema, usuario_id=usuario_id, page=page, page_size=page_size, sort_by='timestamp', sort_order=-1)
         else:
             # Crear una instancia de GetAllNewsDB
             getNews = GetAllNewsDB()
             
             # Llamar al método get_all_news
-            news = getNews.get_all_news(page=page, page_size=page_size)
+            news = getNews.get_all_news(page=page, page_size=page_size,sort_by='timestamp', sort_order=-1)
         
         # Convertir los resultados a JSON usando json_util
         response = json_util.dumps(news)

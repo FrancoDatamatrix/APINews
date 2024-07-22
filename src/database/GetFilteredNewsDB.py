@@ -12,13 +12,10 @@ class GetFilteredNewsDB:
         self.client = MongoClient(os.getenv("DB_URL"))
         self.user_collection = GetUserDB()
 
-    def get_filtered_news(self, tema=None, usuario_id=None, page=1, page_size=1):
+    def get_filtered_news(self, tema=None, usuario_id=None, page=1, page_size=1, sort_by='timestamp', sort_order=-1):
         print("Filtrando por tema a un admin")
         
         
-        
-        
-
         try:
             
             # Inicializar la variable news
@@ -46,7 +43,7 @@ class GetFilteredNewsDB:
                 news_collection = user_db["news"]
                 
                 # Traer las noticias paginadas de la base de datos
-                news_cursor = news_collection.find(filter_criteria).skip(start_index).limit(page_size)
+                news_cursor = news_collection.find(filter_criteria).sort(sort_by, sort_order).skip(start_index).limit(page_size)
                 news = list(news_cursor)
             
             else:
@@ -57,7 +54,7 @@ class GetFilteredNewsDB:
                     db = self.client[db_name]
                     if "news" in db.list_collection_names():
                         news_collection = db["news"]
-                        searchNews = list(news_collection.find(filter_criteria).skip(start_index).limit(page_size))
+                        searchNews = list(news_collection.find(filter_criteria).sort(sort_by, sort_order).skip(start_index).limit(page_size))
                         news.extend(searchNews)
                     
                     
