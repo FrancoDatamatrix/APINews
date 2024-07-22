@@ -32,8 +32,6 @@ class GetAllNewsDB:
                     
                     
             # Traer las noticias paginadas de la base de datos
-            # news_cursor = self.news_collection.find({}).skip(start_index).limit(page_size)
-            # news = list(news_cursor)
         except Exception as e:
             # Manejar excepciones específicas si es necesario
             print(f"Se produjo un error al obtener las noticias: {e}")

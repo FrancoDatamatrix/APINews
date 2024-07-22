@@ -13,9 +13,7 @@ class GetFilteredNewsDB:
         self.user_collection = GetUserDB()
 
     def get_filtered_news(self, tema=None, usuario_id=None, page=1, page_size=1, sort_by='timestamp', sort_order=-1):
-        print("Filtrando por tema a un admin")
-        
-        
+                
         try:
             
             # Inicializar la variable news
@@ -30,7 +28,6 @@ class GetFilteredNewsDB:
                 user_oid = ObjectId(usuario_id)
                 filter_criteria['usuario_id'] = user_oid
                 
-            logging.info(filter_criteria)
 
             # Calcular el índice de inicio para la paginación
             start_index = (page - 1) * page_size
