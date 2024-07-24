@@ -23,7 +23,7 @@ class GetFilteredNewsDB:
             # Construir el filtro de búsqueda
             filter_criteria = {}
             if tema:
-                filter_criteria['tema'] = tema
+               filter_criteria["tema"] = {"$regex": tema, "$options": "i"}
             if usuario_id:
                 user_oid = ObjectId(usuario_id)
                 filter_criteria['usuario_id'] = user_oid

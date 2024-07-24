@@ -11,7 +11,7 @@ from src.routes.crontab import cron_blueprint
 
 app = Flask(__name__)
 
-CORS(app,supports_credentials=True,origins=["http://4.227.180.95:80"])
+CORS(app,supports_credentials=True,origins=["*"])
 app.config.from_object('config.Config')
 
 jwt = JWTManager(app)
@@ -41,4 +41,4 @@ app.register_blueprint(cron_blueprint, url_prefix="/api/v1")
 
         
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8000)
+    app.run(host='localhost', port=5000, debug=True)
